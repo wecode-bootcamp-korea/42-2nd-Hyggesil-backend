@@ -1,0 +1,37 @@
+{
+  "name": "42-2nd-hyggesil-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "DOTENV_CONFIG_PATH=.env.test jest --setupFiles=dotenv/config",
+    "test:coverage": "DOTENV_CONFIG_PATH=.env.test jest --coverage --setupFiles=dotenv/config",
+    "test:coveragefrom": "DOTENV_CONFIG_PATH=.env.test jest --coverage --setupFiles=dotenv/config --collectCoverageFrom"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wecode-bootcamp-korea/42-2nd-Hyggesil-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wecode-bootcamp-korea/42-2nd-Hyggesil-backend/issues"
+  },
+  "homepage": "https://github.com/wecode-bootcamp-korea/42-2nd-Hyggesil-backend#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "typeorm": "^0.3.12"
+  },
+  "devDependencies": {
+    "jest": "^29.4.3",
+    "supertest": "^6.3.3"
+  }
+}
