@@ -1,6 +1,8 @@
 .env
 .env.test
 db/schema.sql
+db/data/*.csv
+initDB.js
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,macos,visualstudiocode,vim,webstorm,windows,zsh,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,macos,visualstudiocode,vim,webstorm,windows,zsh,linux

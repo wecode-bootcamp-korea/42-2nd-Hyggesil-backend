@@ -6,8 +6,10 @@
   "scripts": {
     "start": "nodemon server.js",
     "test": "DOTENV_CONFIG_PATH=.env.test jest --setupFiles=dotenv/config",
+    "test:only": "DOTENV_CONFIG_PATH=.env.test jest --setupFiles=dotenv/config --testPathPattern",
     "test:coverage": "DOTENV_CONFIG_PATH=.env.test jest --coverage --setupFiles=dotenv/config",
-    "test:coveragefrom": "DOTENV_CONFIG_PATH=.env.test jest --coverage --setupFiles=dotenv/config --collectCoverageFrom"
+    "test:coveragefrom": "DOTENV_CONFIG_PATH=.env.test jest --coverage --setupFiles=dotenv/config --collectCoverageFrom",
+    "initdb": "node initDB.js dbmate=true"
   },
   "repository": {
     "type": "git",
@@ -28,7 +30,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
-    "mysql": "^2.18.1",
+    "mysql2": "^3.1.2",
     "typeorm": "^0.3.12"
   },
   "devDependencies": {
