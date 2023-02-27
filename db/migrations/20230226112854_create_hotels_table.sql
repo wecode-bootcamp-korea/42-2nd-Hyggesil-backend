@@ -4,7 +4,7 @@ CREATE TABLE hotels (
   name VARCHAR(100) NOT NULL,
   address VARCHAR(300) NOT NULL,
   latitude DECIMAL(20,15) NOT NULL,
-  longtitude DECIMAL(20,15) NOT NULL,
+  longitude DECIMAL(20,15) NOT NULL,
   price DECIMAL(15,2) NOT NULL,
   guest_max INT NOT NULL DEFAULT 1,
   bedrooms INT NOT NULL DEFAULT 1,
