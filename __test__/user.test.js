@@ -1,4 +1,3 @@
-const { response } = require('express')
 const request = require('supertest')
 const axios = require('axios')
 
@@ -29,7 +28,7 @@ describe('Sign Up', () => {
         phoneNumber: '010-3456-1411',
       })
       .expect(400)
-      .expect({ message: 'KEY_ERROR' })
+      .expect({ message: '입력한 값이 올바르지 않습니다.' })
   })
 
   test('FAILED: not exist password', async () => {
@@ -41,7 +40,7 @@ describe('Sign Up', () => {
         phoneNumber: '010-3456-1411',
       })
       .expect(400)
-      .expect({ message: 'KEY_ERROR' })
+      .expect({ message: '입력한 값이 올바르지 않습니다.' })
   })
 
   test('FAILED: not exist name', async () => {
@@ -53,7 +52,7 @@ describe('Sign Up', () => {
         phoneNumber: '010-3456-1411',
       })
       .expect(400)
-      .expect({ message: 'KEY_ERROR' })
+      .expect({ message: '입력한 값이 올바르지 않습니다.' })
   })
   test('FAILED: invaild password(특수문자 누락)', async () => {
     await request(app)
@@ -65,7 +64,7 @@ describe('Sign Up', () => {
         phoneNumber: '010-3456-1411',
       })
       .expect(400)
-      .expect({ message: 'INVALID_PASSWORD' })
+      .expect({ message: '비밀번호를 올바르게 입력해 주세요.' })
   })
 
   test('FAILED: invaild password(문자 누락)', async () => {
@@ -78,7 +77,7 @@ describe('Sign Up', () => {
         phoneNumber: '010-3456-1411',
       })
       .expect(400)
-      .expect({ message: 'INVALID_PASSWORD' })
+      .expect({ message: '비밀번호를 올바르게 입력해 주세요.' })
   })
 
   test('FAILED: invaild password(숫자 누락)', async () => {
@@ -91,7 +90,7 @@ describe('Sign Up', () => {
         phoneNumber: '010-3456-1411',
       })
       .expect(400)
-      .expect({ message: 'INVALID_PASSWORD' })
+      .expect({ message: '비밀번호를 올바르게 입력해 주세요.' })
   })
 
   test('FAILED: invaild password(7자 미만)', async () => {
@@ -104,7 +103,7 @@ describe('Sign Up', () => {
         phoneNumber: '010-3456-1411',
       })
       .expect(400)
-      .expect({ message: 'INVALID_PASSWORD' })
+      .expect({ message: '비밀번호를 올바르게 입력해 주세요.' })
   })
 
   test('FAILED: invaild password(16자 이상)', async () => {
@@ -117,7 +116,7 @@ describe('Sign Up', () => {
         phoneNumber: '010-3456-1411',
       })
       .expect(400)
-      .expect({ message: 'INVALID_PASSWORD' })
+      .expect({ message: '비밀번호를 올바르게 입력해 주세요.' })
   })
 
   test('SUCCESS: create user', async () => {
@@ -143,7 +142,7 @@ describe('Sign Up', () => {
         phoneNumber: '010-3456-1411',
       })
       .expect(400)
-      .expect({ message: 'ALREADY_EXIST_USER' })
+      .expect({ message: '등록된 사용자입니다.' })
   })
 
   test('FAILED: ALREADY_EXIST_PHONE_NUMBER', async () => {
@@ -156,7 +155,7 @@ describe('Sign Up', () => {
         phoneNumber: '010-3456-1411',
       })
       .expect(400)
-      .expect({ message: 'ALREADY_EXIST_PHONE_NUMBER' })
+      .expect({ message: '등록된 번호입니다.' })
   })
 })
 
@@ -196,7 +195,7 @@ describe('Login', () => {
         password: 'Abcd014dks!',
       })
       .expect(400)
-      .expect({ message: 'KEY_ERROR' })
+      .expect({ message: '입력한 값이 올바르지 않습니다.' })
   })
 
   test('FAILED: invalid password', async () => {
@@ -206,7 +205,7 @@ describe('Login', () => {
         email: 'test@gmail.com',
       })
       .expect(400)
-      .expect({ message: 'KEY_ERROR' })
+      .expect({ message: '입력한 값이 올바르지 않습니다.' })
   })
 
   test('FAILED: invalid email(이메일 오타)', async () => {
@@ -217,7 +216,7 @@ describe('Login', () => {
         password: 'Abcd014dks!',
       })
       .expect(400)
-      .expect({ message: 'WRONG_EMAIL' })
+      .expect({ message: '잘못된 이메일입니다.' })
   })
 
   test('FAILED: invalid password(비밀번호 오타)', async () => {
@@ -228,7 +227,7 @@ describe('Login', () => {
         password: 'Abcd014dks',
       })
       .expect(400)
-      .expect({ message: 'WRONG_PASSWORD' })
+      .expect({ message: '잘못된 비밀번호입니다.' })
   })
 
   test('SUCCESS: success login', async () => {
@@ -252,14 +251,13 @@ describe.skip('Kakao Login', () => {
     await database.query(`SET FOREIGN_KEY_CHECKS = 0;`)
     await database.query(`TRUNCATE users;`)
     await database.query(`SET FOREIGN_KEY_CHECKS = 1;`)
-
     await database.destroy()
   })
 
   test('FAILED : INVAILD KAKAO TOKEN', async () => {
     const response = await request(app).post('/users/login/kakao')
     expect(response.status).toEqual(400)
-    expect(response.body).toEqual({ message: 'INVALID_KAKAO_ACCESS_TOKEN' })
+    expect(response.body).toEqual({ message: '유효하지 않는 토큰입니다.' })
   })
 
   test('SUCCESS : SUCCESS KAKAO LOGIN', async () => {

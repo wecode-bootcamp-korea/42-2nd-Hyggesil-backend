@@ -22,7 +22,9 @@ class HotelsQueryBuilder extends QueryBuilder {
     const joinTables = [
       'INNER JOIN hotel_areas ha ON h.area_id = ha.id',
       'INNER JOIN hotel_convenient hc ON hc.hotel_id = h.id',
-      `INNER JOIN (SELECT id, name FROM convenients WHERE id IN (${this.convenients.join(',')}) ) c ON hc.convenient_id = c.id`
+      `INNER JOIN (SELECT id, name FROM convenients WHERE id IN (${this.convenients.join(
+        ','
+      )}) ) c ON hc.convenient_id = c.id`,
     ]
 
     return joinTables.join(' ')
@@ -42,7 +44,7 @@ class HotelsQueryBuilder extends QueryBuilder {
   priceBuilder() {
     if (this.priceMin && this.priceMax) {
       if (parseInt(this.priceMin) > parseInt(this.priceMax)) {
-        throw new Error('invalidPriceRange')
+        throw new Error('INVALID_PRICE_RANGE')
       }
 
       return `h.price BETWEEN ${this.priceMin} AND ${this.priceMax}`
@@ -91,7 +93,9 @@ class HotelsQueryBuilder extends QueryBuilder {
   }
 
   havingBuilder() {
-    return this.convenients ? `HAVING JSON_LENGTH(JSON_EXTRACT(convenients, "$")) = ${this.convenients.length}` : ''
+    return this.convenients
+      ? `HAVING JSON_LENGTH(JSON_EXTRACT(convenients, "$")) = ${this.convenients.length}`
+      : ''
   }
 
   orderBuilder() {
@@ -114,8 +118,7 @@ class HotelsQueryBuilder extends QueryBuilder {
       this.havingBuilder(),
       this.orderBuilder(),
       this.limitBuilder(),
-      this.offsetBuilder()
-
+      this.offsetBuilder(),
     ]
 
     const rawQuery = rawQueries.join(' ') + ';'

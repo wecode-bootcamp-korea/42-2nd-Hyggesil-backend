@@ -1,6 +1,10 @@
 require('dotenv').config()
 const { HOTEL_AREAS } = require('../utils/constants')
-const { defaultHotels, testHotelProps, testHotelConvenients } = require('./fixtures/hotelFixture')
+const {
+  defaultHotels,
+  testHotelProps,
+  testHotelConvenients,
+} = require('./fixtures/hotelFixture')
 const request = require('supertest')
 const { createApp } = require('../app')
 const database = require('../models/database')
@@ -15,7 +19,7 @@ describe('Hotel List Test', () => {
     app = createApp()
     await database.initialize()
     const initdbFile = path.resolve(__dirname, '..', 'initdb.js')
-    const initDBcommand = (`node ${initdbFile} dbmate=true test`)
+    const initDBcommand = `node ${initdbFile} dbmate=true test`
     await exec(initDBcommand)
   })
 
@@ -35,9 +39,7 @@ describe('Hotel List Test', () => {
   test('SUCCESS : 호텔 목록 페이지 기능', async () => {
     const pages = [1, 2, 3, 4, 5]
     for (let page of pages) {
-      const response = await request(app)
-        .get('/hotels')
-        .query({ page: page })
+      const response = await request(app).get('/hotels').query({ page: page })
 
       const hotels = response.body.hotels
 
@@ -47,12 +49,10 @@ describe('Hotel List Test', () => {
   })
 
   test('SUCCESS : 호텔 가격별 필터 기능', async () => {
-    const response = await request(app)
-      .get('/hotels')
-      .query({
-        price_min: 50000,
-        price_max: 100000
-      })
+    const response = await request(app).get('/hotels').query({
+      price_min: 50000,
+      price_max: 100000,
+    })
 
     const hotels = response.body.hotels
 
@@ -68,11 +68,9 @@ describe('Hotel List Test', () => {
 
   test('SUCCESS : 호텔 지역별 필터 기능', async () => {
     const areaId = 1
-    const response = await request(app)
-      .get('/hotels')
-      .query({
-        area_id: areaId
-      })
+    const response = await request(app).get('/hotels').query({
+      area_id: areaId,
+    })
 
     const hotels = response.body.hotels
 
@@ -86,13 +84,11 @@ describe('Hotel List Test', () => {
   })
 
   test('SUCCESS : 호텔 옵션 필터 기능', async () => {
-    const response = await request(app)
-      .get('/hotels')
-      .query({
-        bedrooms: 1,
-        beds: 2,
-        bathrooms: 3,
-      })
+    const response = await request(app).get('/hotels').query({
+      bedrooms: 1,
+      beds: 2,
+      bathrooms: 3,
+    })
 
     const hotels = response.body.hotels
 
@@ -108,11 +104,9 @@ describe('Hotel List Test', () => {
 
   test('SUCCESS : 호텔 편의 시설별 필터 기능', async () => {
     const convenients = [1, 2, 3]
-    const response = await request(app)
-      .get('/hotels')
-      .query({
-        convenients: convenients
-      })
+    const response = await request(app).get('/hotels').query({
+      convenients: convenients,
+    })
 
     const hotels = response.body.hotels
 
@@ -133,18 +127,16 @@ describe('Hotel List Test', () => {
     const areaId = 1
     let page = 1
 
-    const response = await request(app)
-      .get('/hotels')
-      .query({
-        price_min: priceMin,
-        price_max: priceMax,
-        bedrooms: bedrooms,
-        beds: beds,
-        bathrooms: bathrooms,
-        convenients: convenients,
-        area_id: areaId,
-        page: page
-      })
+    const response = await request(app).get('/hotels').query({
+      price_min: priceMin,
+      price_max: priceMax,
+      bedrooms: bedrooms,
+      beds: beds,
+      bathrooms: bathrooms,
+      convenients: convenients,
+      area_id: areaId,
+      page: page,
+    })
 
     const hotels = response.body.hotels
 

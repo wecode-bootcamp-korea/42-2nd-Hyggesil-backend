@@ -1,5 +1,21 @@
 const database = require('./database')
 
+const checkUserByToken = async (userId) => {
+  const [data] = await database.query(
+    `
+    SELECT EXISTS
+    (
+      SELECT * FROM
+      users
+      WHERE
+      users.id = ? 
+      ) AS checkUser;
+    `,
+    [userId]
+  )
+  return !!parseInt(data.checkUser)
+}
+
 const checkUserByKakaoId = async (kakaoId) => {
   const [data] = await database.query(
     `
@@ -125,6 +141,7 @@ const getUserId = async (userInfo) => {
 }
 
 module.exports = {
+  checkUserByToken,
   checkUserByKakaoId,
   checkUserByEmail,
   checkUserByPhoneNumber,
