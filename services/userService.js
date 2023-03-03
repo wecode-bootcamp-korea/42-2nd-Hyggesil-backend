@@ -22,9 +22,7 @@ const createToken = async (userInfo) => {
 const signup = async (name, email, password, phoneNumber) => {
   const checkUserByEmail = await userDao.checkUserByEmail(email)
   if (checkUserByEmail) {
-    const err = new Error('ALREADY_EXIST_USER')
-    err.statusCode = 400
-    throw err
+    throw new Error('ALREADY_EXIST_USER')
   }
 
   if (phoneNumber) {
@@ -32,9 +30,7 @@ const signup = async (name, email, password, phoneNumber) => {
       phoneNumber
     )
     if (checkUserByPhoneNumber) {
-      const err = new Error('ALREADY_EXIST_PHONE_NUMBER')
-      err.statusCode = 400
-      throw err
+      throw new Error('ALREADY_EXIST_PHONE_NUMBER')
     }
   }
 
@@ -45,19 +41,18 @@ const signup = async (name, email, password, phoneNumber) => {
 const login = async (email, password) => {
   const userInfo = await userDao.getPasswordByEmail(email)
   if (!userInfo) {
-    const err = new Error('WRONG_EMAIL')
-    err.statusCode = 400
-    throw err
+    throw new Error('WRONG_EMAIL')
   }
+
   const hasedPassword = userInfo.password
   const checkHash = await bcrypt.compare(password, hasedPassword)
   if (!checkHash) {
-    const err = new Error('WRONG_PASSWORD')
-    err.statusCode = 400
-    throw err
+    throw new Error('WRONG_PASSWORD')
   }
+
   const userId = await userDao.getUserId(email)
   const accessToken = createToken(userId)
+
   return accessToken
 }
 
@@ -79,9 +74,7 @@ const kakaoLogin = async (kakaoAccessToken) => {
   if (!checkUserByKakaoId) {
     const checkcUserEmailByKakaoId = await userDao.checkUserByEmail(userEmail)
     if (checkcUserEmailByKakaoId) {
-      const err = new Error('ALREADY_EXIST_EMAIL')
-      err.statusCode = 400
-      throw err
+      throw new Error('ALREADY_EXIST_EMAIL')
     }
 
     await userDao.createKakaoUser(kakaoId, userName, userEmail)
