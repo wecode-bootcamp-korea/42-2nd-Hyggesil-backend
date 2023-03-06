@@ -17,15 +17,19 @@ class HotelsQueryBuilder extends QueryBuilder {
 
   joinBuilder() {
     this.columns.push('ha.name areaName')
-    this.columns.push('JSON_ARRAYAGG(c.name) convenients')
 
     const joinTables = [
       'INNER JOIN hotel_areas ha ON h.area_id = ha.id',
       'INNER JOIN hotel_convenient hc ON hc.hotel_id = h.id',
-      `INNER JOIN (SELECT id, name FROM convenients WHERE id IN (${this.convenients.join(
-        ','
-      )}) ) c ON hc.convenient_id = c.id`,
     ]
+
+    if (this.convenients.length) {
+      this.columns.push('JSON_ARRAYAGG(c.name) convenients')
+
+      joinTables.push(
+        `INNER JOIN (SELECT id, name FROM convenients WHERE id IN (${this.convenients.join(',')}) ) c ON hc.convenient_id = c.id`
+      )
+    }
 
     return joinTables.join(' ')
   }
@@ -93,7 +97,7 @@ class HotelsQueryBuilder extends QueryBuilder {
   }
 
   havingBuilder() {
-    return this.convenients
+    return this.convenients.length
       ? `HAVING JSON_LENGTH(JSON_EXTRACT(convenients, "$")) = ${this.convenients.length}`
       : ''
   }
@@ -118,7 +122,7 @@ class HotelsQueryBuilder extends QueryBuilder {
       this.havingBuilder(),
       this.orderBuilder(),
       this.limitBuilder(),
-      this.offsetBuilder(),
+      this.offsetBuilder()
     ]
 
     const rawQuery = rawQueries.join(' ') + ';'

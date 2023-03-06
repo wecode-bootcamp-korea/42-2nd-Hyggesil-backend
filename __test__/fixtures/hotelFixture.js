@@ -1,4 +1,5 @@
-const { CONVENIENTS } = require('../../utils/constants')
+const { CONVENIENTS, HOTEL_AREAS } = require('../../utils/constants')
+const { getRandomNumber, getRandomPrice } = require('../../utils')
 
 const testHotelProps = (hotels) => {
   for (let hotel of hotels) {
@@ -13,126 +14,140 @@ const testHotelConvenients = (hotel, convenients) => {
   }
 }
 
-const defaultHotels = [
-  {
-    id: 1,
-    name: '그랜드 인터컨티넨탈 서울 팔래스',
-    address: '서울 강남구 테헤란로 427 위워크',
-    coordinate: { lat: 127.04854877116082, lng: 37.50526058929731 },
-    price: 10000,
-    guestMax: 1,
-    bedrooms: 1,
-    beds: 1,
-    bathrooms: 1,
-    thumbnailUrl: 'http://localhost/image.jpg',
-    user_id: 1,
-    area_id: 1,
-    areaName: '강동구',
-    convenients: ['주방', '무선 인터넷', '업무 전용 공간', '건물 내 무료 주차', 'TV'],
-    images: [
-      'http://localhost/1.jpg',
-      'http://localhost/2.jpg',
-      'http://localhost/3.jpg',
-      'http://localhost/4.jpg',
-      'http://localhost/5.jpg'
-    ]
-  },
-  {
-    id: 2,
-    name: '신라스테이 역삼',
-    address: '서울 강남구 테헤란로 427 위워크',
-    coordinate: { lat: 127.04854877116082, lng: 37.50526058929731 },
-    price: 20000,
-    guestMax: 1,
-    bedrooms: 1,
-    beds: 1,
-    bathrooms: 1,
-    thumbnailUrl: 'http://localhost/image.jpg',
-    user_id: 1,
-    area_id: 1,
-    areaName: '강동구',
-    convenients: ['주방', '무선 인터넷', '업무 전용 공간', '건물 내 무료 주차'],
-    images: [
-      'http://localhost/1.jpg',
-      'http://localhost/2.jpg',
-      'http://localhost/3.jpg',
-      'http://localhost/4.jpg',
-      'http://localhost/5.jpg'
-    ]
-  },
-  {
-    id: 3,
-    name: '롯데호텔 서울',
-    address: '서울 강남구 테헤란로 427 위워크',
-    coordinate: { lat: 127.04854877116082, lng: 37.50526058929731 },
-    price: 30000,
-    guestMax: 1,
-    bedrooms: 1,
-    beds: 1,
-    bathrooms: 1,
-    thumbnailUrl: 'http://localhost/image.jpg',
-    user_id: 1,
-    area_id: 1,
-    areaName: '강동구',
-    convenients: ['주방', '무선 인터넷', '업무 전용 공간'],
-    images: [
-      'http://localhost/1.jpg',
-      'http://localhost/2.jpg',
-      'http://localhost/3.jpg',
-      'http://localhost/4.jpg',
-      'http://localhost/5.jpg'
-    ]
-  },
-  {
-    id: 4,
-    name: 'JW 메리어트 호텔 서울',
-    address: '서울 강남구 테헤란로 427 위워크',
-    coordinate: { lat: 127.04854877116082, lng: 37.50526058929731 },
-    price: 40000,
-    guestMax: 1,
-    bedrooms: 1,
-    beds: 1,
-    bathrooms: 1,
-    thumbnailUrl: 'http://localhost/image.jpg',
-    user_id: 1,
-    area_id: 1,
-    areaName: '강동구',
-    convenients: ['주방', '무선 인터넷'],
-    images: [
-      'http://localhost/1.jpg',
-      'http://localhost/2.jpg',
-      'http://localhost/3.jpg',
-      'http://localhost/4.jpg',
-      'http://localhost/5.jpg'
-    ]
-  },
-  {
-    id: 5,
-    name: '프레지던트 호텔',
-    address: '서울 강남구 테헤란로 427 위워크',
-    coordinate: { lat: 127.04854877116082, lng: 37.50526058929731 },
-    price: 50000,
-    guestMax: 1,
-    bedrooms: 1,
-    beds: 1,
-    bathrooms: 1,
-    thumbnailUrl: 'http://localhost/image.jpg',
-    user_id: 1,
-    area_id: 1,
-    areaName: '강동구',
-    convenients: ['주방'],
-    images: [
-      'http://localhost/1.jpg',
-      'http://localhost/2.jpg',
-      'http://localhost/3.jpg',
-      'http://localhost/4.jpg',
-      'http://localhost/5.jpg'
-    ]
+class HotelFixture {
+  constructor(database) {
+    this.database = database
   }
-]
+
+  async createUser() {
+    const rawQuery = `
+    INSERT INTO users
+    (name, email, password, phone_number)
+    VALUES
+    ('testUserName', 'testemail@gmail.com', '1234', '010-1234-1234');`
+
+    return this.database.query(rawQuery)
+  }
+
+  async createHotelAreas() {
+    for (let [id, area] of Object.entries(HOTEL_AREAS)) {
+      const rawQuery = `
+      INSERT INTO hotel_areas
+      (id, name)
+      VALUES
+      (${id}, '${area}')
+      ;`
+
+      await this.database.query(rawQuery)
+    }
+
+    return
+  }
+
+  async createConvenients() {
+    for (let [id, convenient] of Object.entries(CONVENIENTS)) {
+      const rawQuery = `
+      INSERT INTO convenients
+      (id, name)
+      VALUES
+      (${id}, '${convenient}')
+      ;`
+
+      await this.database.query(rawQuery)
+    }
+
+    return
+  }
+
+  async createHotelImages() {
+    for (let hotelId = 1; hotelId <= 25; hotelId++) {
+
+      for (let imageName = 1; imageName <= 5; imageName++) {
+        const rawQuery = `
+        INSERT INTO hotel_images
+        (hotel_id, url)
+        VALUES
+        (${hotelId}, 'http://127.0.0.1/hotels/${hotelId}/${imageName}.jpg');`
+
+        await this.database.query(rawQuery)
+      }
+    }
+
+    return
+  }
+
+  async createHotels() {
+    for (let i = 1; i <= 25; i++) {
+      const rawQuery = `
+      INSERT INTO hotels
+      (name, address, latitude, longitude, price, user_id, area_id)
+      VALUES
+      (
+        'testName ${i}',
+      'testAddress ${i}',
+      '127.048548771160820',
+      '37.505260589297310',
+      ${getRandomPrice()},
+      1,
+      ${getRandomNumber(4)})
+      ;`
+
+      await this.database.query(rawQuery)
+    }
+
+    return
+  }
+
+  async createHotelConvenient() {
+    for (let hotelId = 1; hotelId <= 25; hotelId++) {
+
+      for (let convenientId = 1; convenientId <= 5; convenientId++) {
+        const rawQuery = `
+        INSERT INTO hotel_convenient
+        (hotel_id,convenient_id)
+        VALUES
+        (${hotelId},${convenientId});`
+
+        await this.database.query(rawQuery)
+      }
+    }
+
+    return
+  }
+
+  async initialize() {
+    await this.createUser()
+    await this.createConvenients()
+    await this.createHotelAreas()
+    await this.createHotels()
+    await this.createHotelImages()
+    await this.createHotelConvenient()
+
+    return
+  }
+
+  async truncateTables() {
+    const tables = [
+      'users',
+      'convenients',
+      'hotel_areas',
+      'hotels',
+      'hotel_images',
+      'hotel_convenient'
+    ]
+
+    await this.database.query(`SET FOREIGN_KEY_CHECKS = 0;`)
+    for (let table of tables) {
+      const rawQuery = `TRUNCATE ${table};`
+      await this.database.query(rawQuery)
+    }
+    await this.database.query(`SET FOREIGN_KEY_CHECKS = 1;`)
+  }
+
+}
 
 module.exports = {
-  defaultHotels,
   testHotelProps,
-  testHotelConvenients
+  testHotelConvenients,
+  HotelFixture
 }

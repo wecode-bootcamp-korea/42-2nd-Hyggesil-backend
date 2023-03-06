@@ -27,6 +27,10 @@ class HotelImagesQueryBuilder extends QueryBuilder {
   }
 
   whereBuilder() {
+    if (!this.hotelIds.length) {
+      return ''
+    }
+
     return `WHERE h.id IN (${Array(this.hotelIds.length).fill('?')})`
   }
 

@@ -10,6 +10,19 @@ const getHotels = catchAsync(async (req, res) => {
   return res.status(200).json({ hotels: hotels })
 })
 
+const getHotel = catchAsync(async (req, res) => {
+  const { hotelId } = req.params
+  const { month = getCurrentMonth() } = req.query
+
+  const hotel = await hotelService.getHotel(hotelId, month)
+
+  return res.status(200).json({ hotel: hotel })
+})
+
+const getCurrentMonth = () => {
+  return new Date().getMonth() + 1
+}
+
 const setFilters = (req) => {
   let [offset, limit] = getOffsetAndLimit(req.query)
 
@@ -55,5 +68,6 @@ const getOffsetAndLimit = (query) => {
 }
 
 module.exports = {
-  getHotels
+  getHotels,
+  getHotel
 }

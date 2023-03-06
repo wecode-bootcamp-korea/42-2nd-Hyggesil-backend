@@ -28,6 +28,14 @@ class HotelConvenientsQueryBuilder extends QueryBuilder {
   }
 
   whereBuilder() {
+    if (typeof this.hotelIds == 'string') {
+      return `WHERE hc.hotel_id IN (${this.hotelIds})`
+    }
+
+    if (!this.hotelIds.length) {
+      return ``
+    }
+
     return `WHERE hc.hotel_id IN (${this.hotelIds.join(',')})`
   }
 
