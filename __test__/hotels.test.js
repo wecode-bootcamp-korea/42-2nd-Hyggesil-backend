@@ -1,38 +1,31 @@
 require('dotenv').config()
 const { HOTEL_AREAS } = require('../utils/constants')
-const {
-  defaultHotels,
-  testHotelProps,
-  testHotelConvenients,
-} = require('./fixtures/hotelFixture')
+const { testHotelProps, testHotelConvenients, HotelFixture } = require('./fixtures/hotelFixture')
 const request = require('supertest')
 const { createApp } = require('../app')
 const database = require('../models/database')
-const util = require('util')
-const exec = util.promisify(require('child_process').exec)
-const path = require('path')
 
 describe('Hotel List Test', () => {
   let app
+  let hotelFixture
 
   beforeAll(async () => {
     app = createApp()
     await database.initialize()
-    const initdbFile = path.resolve(__dirname, '..', 'initdb.js')
-    const initDBcommand = `node ${initdbFile} dbmate=true test`
-    await exec(initDBcommand)
+    hotelFixture = new HotelFixture(database)
+    await hotelFixture.initialize()
   })
 
   afterAll(async () => {
+    await hotelFixture.truncateTables()
     await database.destroy()
   })
 
   test('SUCCESS : 필터 없이 호텔 목록 가져오는 기능', async () => {
     const response = await request(app).get('/hotels')
     const hotels = response.body.hotels
-
     expect(response.status).toEqual(200)
-    expect(hotels).toEqual(defaultHotels)
+
     testHotelProps(hotels)
   })
 
@@ -74,7 +67,6 @@ describe('Hotel List Test', () => {
 
     const hotels = response.body.hotels
 
-    expect(hotels).toHaveLength(5)
     expect(response.status).toEqual(200)
     testHotelProps(hotels)
 

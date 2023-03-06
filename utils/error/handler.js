@@ -7,8 +7,9 @@ const catchAsync = (func) => {
 }
 
 const globalErrorHandler = (err, req, res, next) => {
+  console.error(err)
   const statusCode = messages[err.message]?.statusCode || 500
-  const message = messages[err.message]?.message || '알려지지 않은 에러.'
+  const message = messages[err.message]?.message || 'UNKNOWN_ERROR.'
   res.status(statusCode).json({ message: message })
 }
 

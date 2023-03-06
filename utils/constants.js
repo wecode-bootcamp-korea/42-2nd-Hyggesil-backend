@@ -1,3 +1,4 @@
+const CURRENT_YEAR = '2023'
 const DEFAULT_PAGE = 1
 const DEFAULT_LIMIT = 5
 
@@ -23,5 +24,6 @@ module.exports = {
   DEFAULT_PAGE,
   DEFAULT_LIMIT,
   HOTEL_AREAS,
-  CONVENIENTS
+  CONVENIENTS,
+  CURRENT_YEAR
 }
