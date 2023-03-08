@@ -38,7 +38,7 @@ const getHotel = async (hotelId, month) => {
   const joinedHotel = {
     ...hotel,
     price: Math.floor(hotel.price),
-    images: hotelImages,
+    images: hotelImages.images,
     convenients: convenients,
     unAvailableDate: unAvailableDate
   }

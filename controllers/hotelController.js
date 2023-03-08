@@ -26,15 +26,19 @@ const getCurrentMonth = () => {
 const setFilters = (req) => {
   let [offset, limit] = getOffsetAndLimit(req.query)
 
-  const {
-    area_id,
-    price_min,
-    price_max,
-    bedrooms,
-    beds,
-    bathrooms,
-    convenients = []
-  } = req.query
+  const queryParams = [
+    'area_id',
+    'price_min',
+    'price_max',
+    'bedrooms',
+    'beds',
+    'bathrooms',
+    'search',
+    'checkin',
+    'checkout',
+    'convenients',
+    'guestMax'
+  ]
 
   const filters = {
     offset: offset,
@@ -42,13 +46,17 @@ const setFilters = (req) => {
     convenients: []
   }
 
-  if (area_id) filters.areaId = area_id
-  if (price_min) filters.priceMin = price_min
-  if (price_max) filters.priceMax = price_max
-  if (bedrooms) filters.bedrooms = bedrooms
-  if (beds) filters.beds = beds
-  if (bathrooms) filters.bathrooms = bathrooms
-  if (convenients) filters.convenients.push(...convenients)
+  for (let [key, value] of Object.entries(req.query)) {
+    if (!queryParams.includes(key) || !value) continue
+    switch (key) {
+      case 'convenients':
+        Array.isArray(value) ? filters.convenients = value : filters.convenients.push(value)
+        break
+
+      default:
+        filters[key] = value
+    }
+  }
 
   return filters
 }

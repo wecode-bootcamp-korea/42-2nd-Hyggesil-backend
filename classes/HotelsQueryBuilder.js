@@ -12,7 +12,11 @@ class HotelsQueryBuilder extends QueryBuilder {
     this.bedrooms = filters.bedrooms
     this.beds = filters.beds
     this.bathrooms = filters.bathrooms
+    this.guestMax = filters.guestMax
     this.convenients = filters.convenients
+    this.seaerch = filters.search
+    this.checkin = filters.checkin
+    this.checkout = filters.checkout
   }
 
   joinBuilder() {
@@ -29,6 +33,25 @@ class HotelsQueryBuilder extends QueryBuilder {
       joinTables.push(
         `INNER JOIN (SELECT id, name FROM convenients WHERE id IN (${this.convenients.join(',')}) ) c ON hc.convenient_id = c.id`
       )
+    }
+
+    if (this.checkin && this.checkout) {
+      const availableDateTable = `
+      INNER JOIN
+        (SELECT DISTINCT r.hotel_id, rs.availableDate FROM rooms r
+        INNER JOIN
+          (SELECT
+          room_id, JSON_ARRAYAGG(date) availableDate
+          FROM room_status rs
+          WHERE date
+          BETWEEN "${this.checkin}" AND "${this.checkout}" AND is_available = true
+          GROUP BY rs.room_id
+          HAVING JSON_LENGTH(JSON_EXTRACT(availableDate, "$")) = DATEDIFF("${this.checkout}", "${this.checkin}") + 1)
+        AS rs ON r.id = rs.room_id)
+      AS AD
+      ON h.id = ad.hotel_id`
+
+      joinTables.push(availableDateTable)
     }
 
     return joinTables.join(' ')
@@ -84,6 +107,7 @@ class HotelsQueryBuilder extends QueryBuilder {
 
     this.priceBuilder() ? where.push(this.priceBuilder()) : ''
     this.areaBuilder() ? where.push(this.areaBuilder()) : ''
+    this.guestMax ? where.push(`h.guest_max = ${this.guestMax}`) : ''
 
     for (let option of this.optionsBuilder()) {
       where.push(option)

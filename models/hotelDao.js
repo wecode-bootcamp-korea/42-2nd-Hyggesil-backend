@@ -1,4 +1,3 @@
-const { CURRENT_YEAR } = require('../utils/constants')
 const database = require('./database')
 const HotelsQueryBuilder = require('../classes/HotelsQueryBuilder')
 const HotelImagesQueryBuilder = require('../classes/HotelImagesQueryBuilder')
@@ -112,9 +111,11 @@ const getUnAvailableDate = async (hotelId, month) => {
       ) AS rs
     ON r.id = rs.room_id WHERE r.hotel_id = ?;`
 
-  const [{ unAvailableDate }] = await database.query(
+  const [data] = await database.query(
     rawQuery,
     [isAvailable, hotelId])
+
+  const unAvailableDate = data?.unAvailableDate
 
   if (!unAvailableDate) return []
 
