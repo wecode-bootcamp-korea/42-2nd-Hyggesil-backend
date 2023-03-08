@@ -2,7 +2,7 @@ const database = require('./database')
 
 const checkUserByToken = async (userId) => {
   try {
-    const [result] = await appDataSource.query(
+    const [result] = await database.query(
       `SELECT EXISTS(
         SELECT
           id
@@ -168,6 +168,7 @@ const createReservationPayment = async (
       `,
       [userId]
     )
+
     await queryRunner.commitTransaction()
   } catch (err) {
     await queryRunner.rollbackTransaction()

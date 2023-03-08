@@ -13,7 +13,7 @@ class S3Uploader {
         secretAccessKey: process.env.AWS_S3_SECRET_KEY,
       },
       region: process.env.AWS_S3_REGION,
-      bucket: process.env.AWS_S3_BUCKET
+      bucket: process.env.AWS_S3_BUCKET,
     })
   }
 
@@ -22,13 +22,13 @@ class S3Uploader {
     const params = {
       Bucket: this.client.config.bucket,
       Key: uuid,
-      Body: imageBuffer
+      Body: imageBuffer,
     }
 
     const command = new PutObjectCommand(params)
     try {
       await this.client.send(command)
-      const uploadedURL = path.join(this.client.config.bucket, uuid)
+      const uploadedURL = path.join(process.env.AWS_S3_HOSTNAME, uuid)
       return uploadedURL
     } catch (err) {
       throw new Error('FAILED_TO_UPLOAD')
@@ -44,7 +44,7 @@ class S3Uploader {
       const params = {
         Bucket: this.client.config.bucket,
         Key: uploadPath,
-        Body: imageBuffer
+        Body: imageBuffer,
       }
 
       const command = new PutObjectCommand(params)
@@ -56,7 +56,6 @@ class S3Uploader {
       } catch (err) {
         throw new Error('FAILED_TO_UPLOAD')
       }
-
     } catch (err) {
       console.log(err)
     }
@@ -68,9 +67,7 @@ const getLocalFilePath = (directory, hotelId, fileName) => {
     throw new Error('UNDEFINED_PATH')
   }
 
-  const localFilePath = path.resolve(
-    path.join(directory, hotelId, fileName)
-  )
+  const localFilePath = path.resolve(path.join(directory, hotelId, fileName))
 
   return localFilePath
 }
