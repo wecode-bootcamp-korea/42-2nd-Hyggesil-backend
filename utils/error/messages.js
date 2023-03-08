@@ -61,10 +61,15 @@ const messages = {
     message: '빈 객실이 없습니다.',
   },
 
+  NON_EXISTENT_IMAGES: {
+    statusCode: 400,
+    message: '이미지 파일이 없습니다.',
+  },
+
   FAILED_TO_UPLOAD: {
     statusCode: 400,
     message: '파일 업로드에 실패하였습니다.',
-  }
+  },
 }
 
 deepFreeze(messages)
