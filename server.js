@@ -7,6 +7,7 @@ const PORT = process.env.PORT
 
 const startServer = () => {
   const app = createApp()
+
   database
     .initialize()
     .then(() => {
