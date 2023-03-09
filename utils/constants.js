@@ -15,7 +15,7 @@ const MONTH = [
 
 const CURRENT_YEAR = '2023'
 const DEFAULT_PAGE = 1
-const DEFAULT_LIMIT = 5
+const DEFAULT_LIMIT = 8
 
 const HOTEL_AREAS = {
   1: '강동구',
