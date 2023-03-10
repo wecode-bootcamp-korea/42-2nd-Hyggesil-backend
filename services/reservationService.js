@@ -18,9 +18,9 @@ const reservationPayment = async (
   const date = calculateDate / (24 * 60 * 60 * 1000)
   const price = await reservationDao.getPriceByHotelId(hotelId)
   const checkTotalPrice = date * price
-  if (parseInt(totalPrice) != checkTotalPrice) {
-    throw new Error('THE_TOTAL_PRICES_DO_NOT_MATCH')
-  }
+  // if (parseInt(totalPrice) != checkTotalPrice) {
+  //   throw new Error('THE_TOTAL_PRICES_DO_NOT_MATCH')
+  // }
 
   const orderNumber = uuid.v4()
 

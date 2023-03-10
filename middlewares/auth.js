@@ -19,7 +19,6 @@ const checkValidToken = async (req, res, next) => {
       err.statusCode = 401
       throw err
     }
-
     req.user = userId
 
     next()
