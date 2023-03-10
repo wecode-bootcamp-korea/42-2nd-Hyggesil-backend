@@ -6,9 +6,9 @@ class HotelsQueryBuilder extends QueryBuilder {
     super(tableName, columns)
     this.offset = filters.offset
     this.limit = filters.limit
-    this.priceMin = filters.priceMin
-    this.priceMax = filters.priceMax
-    this.areaId = filters.areaId
+    this.priceMin = filters.price_min
+    this.priceMax = filters.price_max
+    this.areaId = filters.area_id
     this.bedrooms = filters.bedrooms
     this.beds = filters.beds
     this.bathrooms = filters.bathrooms
